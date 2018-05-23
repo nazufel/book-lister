@@ -15,7 +15,7 @@ type Book struct {
 	ID     string  `json:"id"`
 	Isbn   string  `json:"isbn"`
 	Title  string  `json:"title"`
-	Price  string  `json:"price"`
+	Price  *Price  `json:"price"`
 	Author *Author `json:"author"`
 }
 
@@ -24,6 +24,13 @@ type Author struct {
 	Firstname string `json:"firstname"`
 	Lastname  string `json:"lastname"`
 	Biography string `json:"biography"`
+}
+
+// Price Struct
+type Price struct {
+	US float64 `json:"us-price"`
+	UK float64 `json:"uk-price"`
+	AU float64 `json:"au-price"`
 }
 
 // Init books var as a slice Book struct
@@ -69,7 +76,7 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
 			books = append(books[:index], books[index+1:]...)
 			var book Book
 			_ = json.NewDecoder(r.Body).Decode(&book)
-			book.ID = params["id"] // Mock ID - not good for Prod
+			book.ID = params["id"]
 			books = append(books, book)
 			json.NewEncoder(w).Encode(book)
 			return
@@ -94,9 +101,9 @@ func main() {
 
 	// Mock Data
 	// TODO - impliment DB
-	books = append(books, Book{ID: "1", Isbn: "448743", Title: "Book One", Price: "9.99", Author: &Author{Firstname: "John", Lastname: "Doe", Biography: "Likes to write horror and take long walks on sandy beaches."}})
-	books = append(books, Book{ID: "2", Isbn: "847564", Title: "Book Two", Price: "9.49", Author: &Author{Firstname: "Steve", Lastname: "Smith", Biography: "Likes to write romance and go cliff diving."}})
-	books = append(books, Book{ID: "3", Isbn: "123564", Title: "Book Three", Price: "5.99", Author: &Author{Firstname: "Lara", Lastname: "Johnson", Biography: "Likes to write poetry and is in a metal band."}})
+	books = append(books, Book{ID: "1", Isbn: "448743", Price: &Price{US: 9.99, UK: 7.83, AU: 11.88}, Title: "Book One", Author: &Author{Firstname: "John", Lastname: "Doe", Biography: "Likes to write horror and take long walks on sandy beaches."}})
+	books = append(books, Book{ID: "2", Isbn: "847564", Title: "Book Two", Author: &Author{Firstname: "Steve", Lastname: "Smith", Biography: "Likes to write romance and go cliff diving."}})
+	books = append(books, Book{ID: "3", Isbn: "123564", Title: "Book Three", Author: &Author{Firstname: "Lara", Lastname: "Johnson", Biography: "Likes to write poetry and is in a metal band."}})
 
 	// Route Handlers / Endpoints
 	r.HandleFunc("/api/books", getBooks).Methods("GET")
