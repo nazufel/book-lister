@@ -36,14 +36,15 @@ type Price struct {
 // Init books var as a slice Book struct
 var books []Book
 
-// Get All Books
-// All Handle functions needs to have a writer and request inputs
+// All Handle functions needs to have a writer and request methods
+
+// Get All Books Handler
 func getBooks(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(books)
 }
 
-//Get a Single Book
+//Get a Single Book Handler
 func getBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r) // Get params
@@ -57,7 +58,7 @@ func getBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(&Book{})
 }
 
-// Create Books
+// Create Books Handler
 func createBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var book Book
@@ -67,7 +68,7 @@ func createBook(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(book)
 }
 
-// Update Book
+// Update Book Handler
 func updateBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
@@ -84,7 +85,7 @@ func updateBook(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// Delete Book
+// Delete Book Handler
 func deleteBook(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	params := mux.Vars(r)
@@ -102,8 +103,8 @@ func main() {
 	// Mock Data
 	// TODO - impliment DB
 	books = append(books, Book{ID: "1", Isbn: "448743", Price: &Price{US: 9.99, UK: 7.83, AU: 11.88}, Title: "Book One", Author: &Author{Firstname: "John", Lastname: "Doe", Biography: "Likes to write horror and take long walks on sandy beaches."}})
-	books = append(books, Book{ID: "2", Isbn: "847564", Title: "Book Two", Author: &Author{Firstname: "Steve", Lastname: "Smith", Biography: "Likes to write romance and go cliff diving."}})
-	books = append(books, Book{ID: "3", Isbn: "123564", Title: "Book Three", Author: &Author{Firstname: "Lara", Lastname: "Johnson", Biography: "Likes to write poetry and is in a metal band."}})
+	books = append(books, Book{ID: "2", Isbn: "847564", Price: &Price{US: 7.99, UK: 7.11, AU: 9.88}, Title: "Book Two", Author: &Author{Firstname: "Steve", Lastname: "Smith", Biography: "Likes to write romance and go cliff diving."}})
+	books = append(books, Book{ID: "3", Isbn: "123564", Price: &Price{US: 7.89, UK: 7.09, AU: 9.54}, Title: "Book Three", Author: &Author{Firstname: "Lara", Lastname: "Johnson", Biography: "Likes to write poetry and is in a metal band."}})
 
 	// Route Handlers / Endpoints
 	r.HandleFunc("/api/books", getBooks).Methods("GET")
